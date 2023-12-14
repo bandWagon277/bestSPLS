@@ -23,7 +23,7 @@ sparsePLS_0<-function(X,Y,h=2,fullrank=TRUE,maxiter=150,lambda1=0.5,lambda2=0.5)
   loadingY <- NULL
   Xscore<-NULL
   Yscore<-NULL
-  weight <- NULL
+  #weight <- NULL
 
   constrain<-function(lambda,V){
     dis = abs(V)-lambda
@@ -67,7 +67,9 @@ sparsePLS_0<-function(X,Y,h=2,fullrank=TRUE,maxiter=150,lambda1=0.5,lambda2=0.5)
 
     #save weight vector
     weight_x <- u_new/norm_u
-    weight <- cbind(weight,weight_x)
+    loadingX <- cbind(weight,weight_x)
+    weight_y <- v_new/norm_v
+    loadingY <- cbind(weight,weight_y)
 
     #save score vector
     Xscore=cbind(Xscore,e)
@@ -80,12 +82,12 @@ sparsePLS_0<-function(X,Y,h=2,fullrank=TRUE,maxiter=150,lambda1=0.5,lambda2=0.5)
     c = (t(X) %*% e)/norm_e
     d = (t(Y) %*% e)/inner_ew
     #f = (t(Y) %*% w)/norm_w
-    loadingX = cbind(c,loadingX)
-    loadingY = cbind(d,loadingY)
+    #loadingX = cbind(c,loadingX)
+    #loadingY = cbind(d,loadingY)
 
     #deflation
     X = X - e%*%t(c)
     Y = Y - e%*%t(d)
   }
-  return(list(weight=weight,loadingX=loadingX,loadingY=loadingY,Xscore=Xscore,Yscore=Yscore))
+  return(list(loadingX=loadingX,loadingY=loadingY,Xscore=Xscore,Yscore=Yscore))
 }
