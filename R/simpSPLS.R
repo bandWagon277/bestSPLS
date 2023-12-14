@@ -66,11 +66,7 @@ sparsePLS_1<-function (x, y, K=3, eta=0.5, kappa = 0.5, eps = 1e-04, maxstep = 1
   if (q > 1 & !is.null(colnames(y))) {
     colnames(betahat) <- colnames(y)
   }
-  object <- list(x = x, y = y, betahat = betahat, A = A, betamat = betamat,
-                 new2As = new2As, mu = mu, meanx = meanx, normx = normx,
-                 normy = normy, eta = eta, K = K, kappa = kappa, projection = pj)
-  class(object) <- "bspls"
-  object
+  return(list(model = plsfit, index = A))
 }
 
 QCQR <- function(A,b,alpha){
