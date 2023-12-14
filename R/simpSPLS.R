@@ -102,7 +102,7 @@ spls.dv <-function( Z, eta, kappa, eps, maxstep )
   {
     # if univariate response, then just soft thresholding
 
-    c <- ust( Z, eta )
+    c <- Ust( Z, eta )
   }
 
   if ( q>1 )
@@ -122,26 +122,7 @@ spls.dv <-function( Z, eta, kappa, eps, maxstep )
       # initial value for a & c (outside the unit circle)
 
       c <- matrix( 10, p, 1 )
-      c.old <- c
-
-      while ( dis>eps & i<=maxstep )
-      {
-        # optimize a for fixed c
-
-        mcsvd <- svd( M%*%c )
-        a <- mcsvd$u %*% t(mcsvd$v)
-
-        # optimize c for fixed a
-        # soft thresholding ( assuming lambda2 -> Inf )
-
-        c <- ust( M%*%a, eta )
-
-        # calculate discrepancy between a & c
-
-        dis <- max( abs( c - c.old ) )
-        c.old <- c
-        i <- i + 1
-      }
+      c <- case_1(M,c,eps,maxstep,eta)
     }
 
     # solve equation if 0<kappa<0.5
