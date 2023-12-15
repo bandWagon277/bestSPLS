@@ -83,21 +83,16 @@ QCQR <- function(A,b,alpha){
   return(svdA$v%*%(inv%*%c))
 }
 
-spls.dv <-function( Z, eta, kappa, eps, maxstep )
-{
+spls.dv <-function(Z,eta,kappa,eps,maxstep){
   # initialization
-
   p <- nrow(Z)
   q <- ncol(Z)
   Znorm1 <- median( abs(Z) )
   Z <- Z / Znorm1
 
   # main iterations
-
-  if ( q==1 )
-  {
+  if ( q==1 ){
     # if univariate response, then just soft thresholding
-
     c <- Ust( Z, eta )
   }
 
@@ -113,8 +108,7 @@ spls.dv <-function( Z, eta, kappa, eps, maxstep )
 
     # use svd solution if kappa==0.5
 
-    if ( kappa==0.5 )
-    {
+    if ( kappa==0.5 ){
       # initial value for a & c (outside the unit circle)
 
       c <- matrix( 10, p, 1 )
@@ -123,8 +117,7 @@ spls.dv <-function( Z, eta, kappa, eps, maxstep )
 
     # solve equation if 0<kappa<0.5
 
-    if ( kappa>0 & kappa<0.5 )
-    {
+    if ( kappa>0 & kappa<0.5 ){
       kappa2 <- ( 1 - kappa ) / ( 1 - 2*kappa )
 
       # initial value for c (outside the unit circle)
@@ -134,8 +127,7 @@ spls.dv <-function( Z, eta, kappa, eps, maxstep )
 
       # define function for Lagrange part
 
-      while ( dis>eps & i<=maxstep )
-      {
+      while ( dis>eps & i<=maxstep ){
 
         # optimize a for fixed c
 
@@ -144,7 +136,7 @@ spls.dv <-function( Z, eta, kappa, eps, maxstep )
         # optimize c for fixed a
         # soft thresholding ( assuming lambda2 -> Inf )
 
-        c <- ust( M%*%a, eta )
+        c <- Ust( M%*%a, eta )
 
         # calculate discrepancy between a & c
 
@@ -156,15 +148,4 @@ spls.dv <-function( Z, eta, kappa, eps, maxstep )
   }
 
   return(c)
-}
-
-ust <-function( b, eta )
-{
-  b.ust <- matrix( 0, length(b), 1 )
-  if ( eta < 1 )
-  {
-    valb <- abs(b) - eta * max( abs(b) )
-    b.ust[ valb>=0 ] <- valb[ valb>=0 ] * (sign(b))[ valb>=0 ]
-  }
-  return(b.ust)
 }
